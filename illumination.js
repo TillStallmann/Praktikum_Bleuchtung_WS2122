@@ -56,8 +56,45 @@ function phong(position, normal, camPosition)
 
   // TODO: Implementieren Sie die Beleuchtungsberechnung
   //       mit dem Phong-Beleuchtungsmodell.
-  outColor = 
+  let ka = {r: 1.0, g: 1.0, b: 1.0};
+  let kd = {r: 1.0, g: 1.0, b: 1.0};
+  let ks = {r: 1.0, g: 1.0, b: 1.0};
 
+  let i = 0;
+  //for (let i = 0; i >= lights.length; i++)
+  //{
+    let L = new THREE.Vector3();
+    L.subVectors(lights[i].position, position);
+    L.normalize();
+    normal.normalize();
+    let NL = L.dot(normal);
+
+    let R = new THREE.Vector3();
+    R = normal.multiplyScalar(2 * NL);
+    R.subVectors(R, L);
+
+    let V = new THREE.Vector3();
+    V.subVectors(camPosition, position);
+
+    if (NL < 0) NL = 0;
+
+    let VR = Math.pow(R.dot(V), 20);
+
+    outColor.r = ambientLight.intensity.r * ka.r;
+    outColor.g = ambientLight.intensity.g * ka.g;
+    outColor.b = ambientLight.intensity.b * ka.b;
+
+
+
+
+    outColor.r += lights[i].intensity.r * (kd.r * NL);
+    outColor.g += lights[i].intensity.g * (kd.g * NL);
+    outColor.b += lights[i].intensity.b * (kd.b * NL);
+
+    outColor.r += lights[i].intensity.r * (ks.r * VR);
+    outColor.g += lights[i].intensity.g * (ks.g * VR);
+    outColor.b += lights[i].intensity.b * (ks.b * VR);
+  //}
 
 
   // Rueckgabe des berechneten Farbwerts
